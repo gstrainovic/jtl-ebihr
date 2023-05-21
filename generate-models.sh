@@ -1,0 +1,1 @@
+dotnet ef dbcontext scaffold "Data Source=LAPTOP-Q593BSP3\JTLWAWI;Initial Catalog=EazyBusiness;User ID=sa;Password=sa04jT14;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer

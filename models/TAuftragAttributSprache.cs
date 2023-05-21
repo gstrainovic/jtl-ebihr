@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace jtl_ebihr;
+
+public partial class TAuftragAttributSprache
+{
+    public int KAuftragAttribut { get; set; }
+
+    public int KSprache { get; set; }
+
+    public string? CWertVarchar { get; set; }
+
+    public int? NWertInt { get; set; }
+
+    public decimal? FWertDecimal { get; set; }
+
+    public DateTime? DWertDateTime { get; set; }
+
+    public byte[] BRowversion { get; set; } = null!;
+
+    public virtual TAuftragAttribut KAuftragAttributNavigation { get; set; } = null!;
+}

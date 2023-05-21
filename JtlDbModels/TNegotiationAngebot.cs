@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace JtlDbModels;
+
+public partial class TNegotiationAngebot
+{
+    public int KNegotiationAngebot { get; set; }
+
+    public int? KEbayItem { get; set; }
+
+    public decimal FRabattProzentual { get; set; }
+
+    public decimal FRabattAbsolut { get; set; }
+
+    public byte NIstProzentual { get; set; }
+
+    public string CNachricht { get; set; } = null!;
+
+    public int NRabattmenge { get; set; }
+
+    public int? KAlienItem { get; set; }
+
+    public virtual EbayAlienitem? KAlienItemNavigation { get; set; }
+
+    public virtual EbayItem? KEbayItemNavigation { get; set; }
+}

@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace JtlDbModels;
+
+public partial class PurchaseOrderShipToAddress
+{
+    public int InternalId { get; set; }
+
+    public string Company { get; set; } = null!;
+
+    public string CompanySupplement { get; set; } = null!;
+
+    public string Salutation { get; set; } = null!;
+
+    public string Title { get; set; } = null!;
+
+    public string FirstName { get; set; } = null!;
+
+    public string LastName { get; set; } = null!;
+
+    public string Address { get; set; } = null!;
+
+    public string AddressSupplement { get; set; } = null!;
+
+    public string PostalCode { get; set; } = null!;
+
+    public string City { get; set; } = null!;
+
+    public string State { get; set; } = null!;
+
+    public string CountryIso { get; set; } = null!;
+
+    public string Phone { get; set; } = null!;
+
+    public string Fax { get; set; } = null!;
+
+    public string MobilePhone { get; set; } = null!;
+
+    public string EmailAddress { get; set; } = null!;
+}

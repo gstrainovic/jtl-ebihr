@@ -1,0 +1,6 @@
+{
+    "schema": "https://api.bihr.net/swagger/v2.1/swagger.json",
+    "output": "./BihrClient",
+    "project": "BihrClient",
+    "synchronous": true
+}

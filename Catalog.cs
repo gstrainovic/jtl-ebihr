@@ -1,14 +1,26 @@
 using System.IO.Compression;
 
 public class Catalog {
-    public string Brand { get; internal set; }
+    public string? Brand { get; internal set; }
 
     public static void ProcessGeneratedCatalog(string filePath) {
-        // print extract the zip file to the temp folder
-        Logger.Info($"Extracting {filePath} to {env.tempPath}");
-        ZipFile.ExtractToDirectory(filePath, env.tempPath);
 
-        Csv.GenerateBrands();
+        string catalogTempDir = Path.Combine(Config.tempPath, "catalog");
+
+        // cleanup the temp folder
+        if (Directory.Exists(catalogTempDir)) {
+            Directory.Delete(catalogTempDir, true);
+        }
+
+        // create the temp folder
+        Directory.CreateDirectory(catalogTempDir);
+
+        // print extract the zip file to the temp folder
+        Logger.Info($"Extracting {filePath} to {catalogTempDir}");
+        ZipFile.ExtractToDirectory(filePath, catalogTempDir);
+
+        Csv csv = new Csv();
+        csv.GenerateBrands(catalogTempDir);
 
     }
 }

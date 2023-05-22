@@ -3630,7 +3630,7 @@ public partial class EazyBusinessContext : DbContext
     public virtual DbSet<ZZmListe> ZZmListes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-Q593BSP3\\JTLWAWI;Initial Catalog=EazyBusiness;User ID=sa;Password=sa04jT14;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer(Secret.OptionsBuilderString);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

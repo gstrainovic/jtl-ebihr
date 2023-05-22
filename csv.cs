@@ -1,13 +1,19 @@
+using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
+using JtlDbModels;
 
 class Csv
 {
-    public static void GenerateBrands()
-    {
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+    CsvConfiguration? config;
+
+    public Csv() {
+
+
+        config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             HasHeaderRecord = true,
             Delimiter = ",",
@@ -17,12 +23,25 @@ class Csv
             TrimOptions = TrimOptions.Trim,
             Encoding = Encoding.UTF8
         };
+        if (config == null)
+        {
+            Logger.Error("config is null");
+            return;
+        }
+    }
 
-        //  make a list of brands, without duplicates from the csv files in env.tempPath
+    public void GenerateBrands(string catalogTempDir)
+    {
 
-        var brands = new List<Brand>();
+        string importBrandsFilePath = Path.Combine(Config.tempPath, "importBrands.csv");
+        if (importBrandsFilePath == null)
+        {
+            Logger.Error("importBrandsFilePath is null");
+            return;
+        }
 
-        foreach (var file in Directory.GetFiles(env.tempPath, "*.csv"))
+        var bihrBrands = new List<Brand>();
+        foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
         {
             Logger.Info($"Processing {file}");
             using (var reader = new StreamReader(file))
@@ -32,26 +51,66 @@ class Csv
 
                 foreach (var record in records)
                 {
-                    if (!brands.Any(x => x.Name == record.Brand))
+                    if (!bihrBrands.Any(x => x.Name == record.Brand))
                     {
-                        brands.Add(new Brand { Name = record.Brand });
+                        bihrBrands.Add(new Brand { Name = record.Brand });
                     }
                 }
             }
         }
 
-        // save the list of brands to a csv file
-        using (var writer = new StreamWriter(Path.Combine(env.tempPath, "brands.csv")))
-        using (var csv = new CsvWriter(writer, config))
+        // read the brands from JTL
+        using var db = new EazyBusinessContext();
+        var jtlBrands = db.THerstellers.ToList();
+
+        // compare the brands from JTL with the brands from Bihr
+        // if the brand from Bihr is not in JTL, make a new import csv file
+        var importBrands = new List<Brand>();
+        foreach (var bihrBrand in bihrBrands)
         {
-            csv.WriteRecords(brands);
+            if (!jtlBrands.Any(x => x.CName == bihrBrand.Name))
+            {
+                importBrands.Add(new Brand { Name = bihrBrand.Name });
+                Logger.Info($"Brand {bihrBrand.Name} not found in JTL, added to {importBrandsFilePath}");
+            }
         }
+
+
+
+        // save the import csv file if importBrands is not empty
+        if (importBrands.Count == 0)
+        {
+            Logger.Info($"No brands to import");
+        }
+        else
+        {
+            // delete the import csv file if it exists
+            if (File.Exists(Path.Combine(Config.tempPath, importBrandsFilePath)))
+            {
+                File.Delete(Path.Combine(Config.tempPath, importBrandsFilePath));
+            }
+            using (var writer = new StreamWriter(Path.Combine(Config.tempPath, importBrandsFilePath)))
+            using (var csv = new CsvWriter(writer, config))
+            {
+                csv.WriteRecords(importBrands);
+                Logger.Info($"Saved {importBrandsFilePath}");
+            }
+        }
+
+        bool importBrandsFileExists = File.Exists(Path.Combine(Config.tempPath, importBrandsFilePath));
+
+        if (importBrandsFileExists && importBrandsFilePath != null)
+        {
+            Ameise ameise = new Ameise();
+            ameise.importBrands(importBrandsFilePath);
+        }
+
 
     }
 
     public class Brand
     {
-        public string Name
+        public string? Name
         {
             get; set;
         }
@@ -59,11 +118,11 @@ class Csv
 
     public class Catalog
     {
-        public string CategoryPath { get; set; }
-        public string ProductId { get; set; }
-        public string BarCode { get; set; }
-        public string DiscountClass { get; set; }
-        public string FurtherDescription { get; set; }
+        public string? CategoryPath { get; set; }
+        public string? ProductId { get; set; }
+        public string? BarCode { get; set; }
+        public string? DiscountClass { get; set; }
+        public string? FurtherDescription { get; set; }
         public int Height { get; set; }
         public decimal PublicPriceHT { get; set; }
         public decimal PublicPriceTTC { get; set; }
@@ -71,20 +130,20 @@ class Csv
         public bool IsPartialShippingAllowed { get; set; }
         public bool IsRemainingOnBackOrderAllowed { get; set; }
         public int Length { get; set; }
-        public string LongDescription1 { get; set; }
-        public string LongDescription2 { get; set; }
-        public string LongDescription3 { get; set; }
+        public string? LongDescription1 { get; set; }
+        public string? LongDescription2 { get; set; }
+        public string? LongDescription3 { get; set; }
         public int SalesMultiple { get; set; }
-        public string ShortDescription1 { get; set; }
-        public string ShortDescription2 { get; set; }
-        public string ShortDescription3 { get; set; }
+        public string? ShortDescription1 { get; set; }
+        public string? ShortDescription2 { get; set; }
+        public string? ShortDescription3 { get; set; }
         public int Volume { get; set; }
         public int Weight { get; set; }
         public int Width { get; set; }
-        public string Brand { get; set; }
-        public string Key { get; set; }
-        public string Value { get; set; }
-        public string NewPartNumber { get; set; }
-        public string CommodityCode { get; set; }
+        public string? Brand { get; set; }
+        public string? Key { get; set; }
+        public string? Value { get; set; }
+        public string? NewPartNumber { get; set; }
+        public string? CommodityCode { get; set; }
     }
 }

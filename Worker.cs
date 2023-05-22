@@ -7,17 +7,22 @@ public class Worker : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        Logger.Info("Worker started"); 
+        // create the temp folder if it does not exist
+        if (!Directory.Exists(Config.tempPath))
+        {
+            Directory.CreateDirectory(Config.tempPath);
+        }
+
         var httpClient = new HttpClient();
 
-        var tokenClient =  new Client.AuthenticationClient(env.url, httpClient);
-        var token = await tokenClient.PostTokenAsync(env.userName, env.passWord);
+        var tokenClient =  new Client.AuthenticationClient(Config.url, httpClient);
+        var token = await tokenClient.PostTokenAsync(Secret.BihrUserName, Secret.BihrPassWord);
 
         // add the token to the http client
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Access_token);
 
         // get the catalog client
-        var catalogClient = new Client.CatalogClient(env.url, httpClient);
+        var catalogClient = new Client.CatalogClient(Config.url, httpClient);
 
         // get the ticketId from the catalog
         var ticket = await catalogClient.PostRequestAsync(

@@ -478,7 +478,8 @@ $RECYCLE.BIN/
 
 # custom
 .env
-env.cs
-env.fs
+Env.cs
+Env.fs
 temp/*
 sqlite.*
+Secret.cs

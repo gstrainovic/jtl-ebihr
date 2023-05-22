@@ -1,8 +1,14 @@
 using System.IO.Compression;
 
 public class Catalog {
+    public string Brand { get; internal set; }
+
     public static void ProcessGeneratedCatalog(string filePath) {
-        // extract the zip file
-        ZipFile.ExtractToDirectory(filePath, Env.env.tempPath);
+        // print extract the zip file to the temp folder
+        Logger.Info($"Extracting {filePath} to {env.tempPath}");
+        ZipFile.ExtractToDirectory(filePath, env.tempPath);
+
+        Csv.GenerateBrands();
+
     }
 }

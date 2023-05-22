@@ -17,7 +17,6 @@
 namespace Client
 {
     using System.IO.Compression;
-    using Env;
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -1310,14 +1309,13 @@ namespace Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-
                             // cleanup the temp folder
-                            if (Directory.Exists(Env.env.tempPath)) {
-                                Directory.Delete(Env.env.tempPath, true);
+                            if (Directory.Exists(env.tempPath)) {
+                                Directory.Delete(env.tempPath, true);
                             }
-                            
+
                             // create the temp folder
-                            Directory.CreateDirectory(Env.env.tempPath);
+                            Directory.CreateDirectory(env.tempPath);
 
                             using (var fileStream = new FileStream(env.generatedCatalogPath, FileMode.Create, FileAccess.Write, FileShare.None))
                             {

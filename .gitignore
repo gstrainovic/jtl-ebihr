@@ -476,8 +476,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# custom
 .env
 env.cs
 env.fs
-
 temp/*
+sqlite.*

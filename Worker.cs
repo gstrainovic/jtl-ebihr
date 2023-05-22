@@ -1,4 +1,3 @@
-using Env;
 namespace jtl_ebihr;
 using JtlDbModels;
 using System.Net.Http.Headers;
@@ -6,20 +5,9 @@ using Client;
 
 public class Worker : BackgroundService
 {
-    private readonly ILogger<Worker> _logger;
-
-    public Worker(ILogger<Worker> logger)
-    {
-        _logger = logger;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-        // while (!stoppingToken.IsCancellationRequested)
-        // {
-        //     await Task.Delay(1000, stoppingToken);
-        // }
+        Logger.Info("Worker started"); 
         var httpClient = new HttpClient();
 
         var tokenClient =  new Client.AuthenticationClient(env.url, httpClient);
@@ -34,15 +22,28 @@ public class Worker : BackgroundService
         // get the ticketId from the catalog
         var ticket = await catalogClient.PostRequestAsync(
             CompressionType.ZIP,
-            SerializationType.JSON,
+            SerializationType.CSV,
             CatalogType.ExtendedReferences,
             CatalogCompletion.Full
         );
         
-        // get the downloadId
-        var download = await catalogClient.GetGenerationStatusAsync(ticket.TicketId);
+        // log the ticketId for download the catalog
+        Logger.Info($"TicketId: {ticket.TicketId}");
 
-        // reqeust the download
+        // repeat the get downloadId until the download is ready
+        var download = await catalogClient.GetGenerationStatusAsync(ticket.TicketId);
+        while (download.RequestStatus != "DONE")
+        {   
+            Logger.Info($"Status: {download.RequestStatus}, DownloadId: {download.DownloadId}");
+            Logger.Info("Waiting 1s for download to be ready");
+            await Task.Delay(1000);
+            download = await catalogClient.GetGenerationStatusAsync(ticket.TicketId);
+            Logger.Info($"Status: {download.RequestStatus}, DownloadId: {download.DownloadId}");
+        }
+        // log the DownloadId for download the catalog
+        Logger.Info($"DownloadId: {download.DownloadId}");
+
+        // request the download
         await catalogClient.GetGeneratedFileAsync(download.DownloadId);
 
         // db test
@@ -50,7 +51,7 @@ public class Worker : BackgroundService
         var artikels = db.TArtikels.ToList();
         foreach (var artikel in artikels)
         {
-            Console.WriteLine($"{artikel.CArtNr}");
+            Logger.Info($"{artikel.CArtNr}");
         }
 
     }

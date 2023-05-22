@@ -1,0 +1,11 @@
+{
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "bihr",
+            "database": "${workspaceFolder:jtl-ebihr}/sqlite.db"
+        }
+    ]
+}

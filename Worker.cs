@@ -45,9 +45,6 @@ public class Worker : BackgroundService
         // reqeust the download
         await catalogClient.GetGeneratedFileAsync(download.DownloadId);
 
-
-
-
         // db test
         using var db = new EazyBusinessContext();
         var artikels = db.TArtikels.ToList();

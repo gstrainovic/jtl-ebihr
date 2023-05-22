@@ -1310,6 +1310,15 @@ namespace Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
+
+                            // cleanup the temp folder
+                            if (Directory.Exists(Env.env.tempPath)) {
+                                Directory.Delete(Env.env.tempPath, true);
+                            }
+                            
+                            // create the temp folder
+                            Directory.CreateDirectory(Env.env.tempPath);
+
                             using (var fileStream = new FileStream(env.generatedCatalogPath, FileMode.Create, FileAccess.Write, FileShare.None))
                             {
                                 await response_.Content.CopyToAsync(fileStream).ConfigureAwait(false);

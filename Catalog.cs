@@ -1,7 +1,6 @@
 using System.IO.Compression;
 
 public class Catalog {
-    public string? Brand { get; internal set; }
 
     public static void ProcessGeneratedCatalog(string filePath) {
 

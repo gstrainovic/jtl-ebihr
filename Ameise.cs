@@ -32,6 +32,8 @@ public class Ameise
 
     private void run(string template, string inputfile)
     {
+        Logger.Info($"Running Ameise with template {template} and inputfile {inputfile}");
+
         if (logFilePath == null)
         {
             Logger.Error("logFilePath is null");
@@ -47,8 +49,6 @@ public class Ameise
             File.Delete(logFilePath);
         }
 
-        // JTL-wawi-ameise.exe --server=(local)\JTLWAWI --database=eazybusiness --dbuser=sa --dbpass=sa04jT14 
-        // --templateid=IMP5 --inputfile=import.csv --log="bericht_%db_%y-%m-%d-%H%i%s.txt"
         var args = $"--server={Secret.SQLServerName} --database={Secret.SQLDatabaseName} --dbuser={Secret.SQLUserName} --dbpass={Secret.SQLPassword} --templateid={template} --inputfile={inputfile} --log={logFilePath} --nostdout";
         // call JTL-wawi-ameise.exe with the arguments
         var process = Process.Start(Config.ameiseExe, args);

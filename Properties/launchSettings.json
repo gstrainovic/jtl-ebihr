@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "jtl_ebihr": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

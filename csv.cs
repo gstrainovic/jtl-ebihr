@@ -5,16 +5,12 @@ using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
 using JtlDbModels;
-
 class Csv
 {
     CsvConfiguration? config;
     Ameise ameise = new Ameise();
-
-
-    public Csv() {
-
-
+    public Csv()
+    {
         config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             HasHeaderRecord = true,
@@ -31,9 +27,6 @@ class Csv
             return;
         }
     }
-
-
-
     public void GenerateBrands(string catalogTempDir)
     {
 
@@ -45,13 +38,14 @@ class Csv
         }
 
         var bihrBrands = new List<Brand>();
+
         foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
         {
             Logger.Info($"Processing {file}");
             using (var reader = new StreamReader(file))
             using (var csv = new CsvReader(reader, config))
             {
-                var records = csv.GetRecords<CatalogHardParts>();
+                var records = csv.GetRecords<CatalogHardPartsSource>();
 
                 foreach (var record in records)
                 {
@@ -78,8 +72,6 @@ class Csv
                 Logger.Info($"Brand {bihrBrand.Name} not found in JTL, added to {importBrandsFilePath}");
             }
         }
-
-
 
         // save the import csv file if importBrands is not empty
         if (importBrands.Count == 0)
@@ -108,6 +100,54 @@ class Csv
             ameise.importBrands(importBrandsFilePath);
         }
 
+        // Transform the CSV files with the new column "Lieferant" = "Bihr"
+        foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
+        {
+            var targetRecords = new List<CatalogHardPartsTarget>();
+
+            using (var reader = new StreamReader(file))
+            using (var csvReader = new CsvReader(reader, config))
+            {
+                var sourceRecords = csvReader.GetRecords<CatalogHardPartsSource>();
+
+                foreach (var record in sourceRecords)
+                {
+                    var targetRecord = new CatalogHardPartsTarget
+                    {
+                        ProductCode = record.ProductCode,
+                        SupplierProductCode = record.SupplierProductCode,
+                        Brand = record.Brand,
+                        MainCategory = record.MainCategory,
+                        ProductName = record.ProductName,
+                        Designation = record.Designation,
+                        Weight = record.Weight,
+                        RetailPriceIncludingTax = record.RetailPriceIncludingTax,
+                        RetailPriceExcludingTax = record.RetailPriceExcludingTax,
+                        BaseDealerPriceExcludingTax = record.BaseDealerPriceExcludingTax,
+                        BarCode = record.BarCode,
+                        SalesMultiple = record.SalesMultiple,
+                        StockLevel = record.StockLevel,
+                        DefaultPicture = record.DefaultPicture,
+                        NewPartNumber = record.NewPartNumber,
+                        StockValue = record.StockValue,
+                        CommodityCode = record.CommodityCode,
+                        Lieferant = "Bihr" // Add the new column "Lieferant" with the value "Bihr"
+                    };
+
+                    targetRecords.Add(targetRecord);
+                }
+            }
+
+            // Write the transformed records to a new CSV file with the updated column
+            string targetFilePath = Path.Combine(catalogTempDir, Path.GetFileNameWithoutExtension(file) + "_target.csv");
+            using (var writer = new StreamWriter(targetFilePath))
+            using (var csvWriter = new CsvWriter(writer, config))
+            {
+                csvWriter.WriteRecords(targetRecords);
+            }
+
+            Logger.Info($"Transformed CSV file: {targetFilePath}");
+        }
 
     }
 
@@ -150,7 +190,8 @@ class Csv
         public string? CommodityCode { get; set; }
     }
 
-    public class CatalogHardParts
+    // CatalogHardPartsTarget is CatalogHardPartsSource with added column "Lieferant"
+    public class CatalogHardPartsTarget
     {
         public string? ProductCode { get; set; }
         public string? SupplierProductCode { get; set; }
@@ -169,5 +210,30 @@ class Csv
         public string? NewPartNumber { get; set; }
         public int StockValue { get; set; }
         public string? CommodityCode { get; set; }
+        public string Lieferant { get; set; } = "Bihr";
+
+    }
+
+
+    public class CatalogHardPartsSource
+    {
+        public string? ProductCode { get; set; }
+        public string? SupplierProductCode { get; set; }
+        public string? Brand { get; set; }
+        public string? MainCategory { get; set; }
+        public string? ProductName { get; set; }
+        public string? Designation { get; set; }
+        public int Weight { get; set; }
+        public decimal RetailPriceIncludingTax { get; set; }
+        public decimal RetailPriceExcludingTax { get; set; }
+        public decimal BaseDealerPriceExcludingTax { get; set; }
+        public string? BarCode { get; set; }
+        public int SalesMultiple { get; set; }
+        public string? StockLevel { get; set; }
+        public string? DefaultPicture { get; set; }
+        public string? NewPartNumber { get; set; }
+        public int StockValue { get; set; }
+        public string? CommodityCode { get; set; }
+
     }
 }

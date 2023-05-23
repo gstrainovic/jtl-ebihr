@@ -4,9 +4,6 @@ using System.Reflection;
 public class Ameise
 {
 
-    public const string logFileName = "Ameise.log";
-    string? logFilePath;
-
     public Ameise()
     {
         // find JTL-wawi-ameise.exe in the JTL-Software folder
@@ -17,12 +14,7 @@ public class Ameise
             return;
         }
 
-        logFilePath = Path.Combine(Config.tempPath, logFileName);
-        if (logFilePath == null)
-        {
-            Logger.Error("logFilePath is null");
-            return;
-        }
+
         // start a full sql backup of the JTL database
         // this is needed because the import of the brands will change the database
         // and we want to be able to restore the database if something goes wrong
@@ -32,22 +24,20 @@ public class Ameise
 
     private void run(string template, string inputfile)
     {
-        Logger.Info($"Running Ameise with template {template} and inputfile {inputfile}");
 
+        // logfile is template + ms since 1970
+        string logFileName = $"{template}_{DateTimeOffset.Now.ToUnixTimeMilliseconds()}.log";
+        string logFilePath = Path.Combine(Config.tempPath, logFileName);
         if (logFilePath == null)
         {
             Logger.Error("logFilePath is null");
             return;
         }
 
+        Logger.Info($"Running Ameise with template {template} and inputfile {inputfile}");
+ 
         // change to the JTL-Software folder
         Directory.SetCurrentDirectory(Config.jtlSoftwarePath);
-
-        // delete the logfile if it exists
-        if (File.Exists(logFilePath))
-        {
-            File.Delete(logFilePath);
-        }
 
         // on error stop the process
         var process = new Process();
@@ -58,9 +48,7 @@ public class Ameise
             process.StartInfo.FileName = Config.ameiseExe;
             process.StartInfo.Arguments = args;
             process.Start();
-            process.WaitForExit();
-            var log = File.ReadAllText(logFilePath);
-            Logger.Info(log);
+            // process.WaitForExit();
         }
         catch (Exception e)
         {

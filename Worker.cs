@@ -62,8 +62,8 @@ public class Worker : BackgroundService
             // // request the download and start the processing
             // await catalogClient.GetGeneratedFileAsync(download.DownloadId);
 
-            Logger.Info("Waiting 60s before starting the next run");
-            await Task.Delay(60_000, stoppingToken);
+            Logger.Info("Waiting 24h for next run");
+            await Task.Delay(1000 * 60 * 60 * 24, stoppingToken);
         }
 
     }

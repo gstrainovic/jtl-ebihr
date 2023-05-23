@@ -18,8 +18,19 @@ public class Catalog {
         Logger.Info($"Extracting {filePath} to {catalogTempDir}");
         ZipFile.ExtractToDirectory(filePath, catalogTempDir);
 
+
+        // // split the csv into multiple csv files
+        // foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv")) {
+        //     Logger.Info($"Processing {file}");
+        //     // Split this CSV file into 1 MB chunks.
+        //     Csv.SplitCSV(file);
+        //     //  delete the original file
+        //     File.Delete(file);
+        // }
+
         Csv csv = new Csv();
         csv.GenerateBrands(catalogTempDir);
+        return;
 
         // send all files from catalogTempDir to Ameise
         var ameise = new Ameise();

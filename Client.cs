@@ -392,12 +392,12 @@ namespace Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            string generatedCatalogPath = Path.Combine(Config.tempPath, "generatedCatalog.zip");
+                            string generatedCatalogPath = Path.Combine(Config.tempPath, "HardPart.zip");
                             using (var fileStream = new FileStream(generatedCatalogPath, FileMode.Create, FileAccess.Write, FileShare.None))
                             {
                                 await response_.Content.CopyToAsync(fileStream).ConfigureAwait(false);
                             }
-                            Catalog.ProcessGeneratedCatalog(generatedCatalogPath);
+                            Catalog.ProcessHardPart(generatedCatalogPath);
                             return;
                         }
                         else
@@ -513,6 +513,12 @@ namespace Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
+                            string generatedCatalogPath = Path.Combine(Config.tempPath, "RiderGear.zip");
+                            using (var fileStream = new FileStream(generatedCatalogPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                            {
+                                await response_.Content.CopyToAsync(fileStream).ConfigureAwait(false);
+                            }
+                            Catalog.ProcessRiderGear(generatedCatalogPath);
                             return;
                         }
                         else
@@ -1320,7 +1326,7 @@ namespace Client
                             {
                                 await response_.Content.CopyToAsync(fileStream).ConfigureAwait(false);
                             }
-                            Catalog.ProcessGeneratedCatalog(generatedCatalogPath);
+                            Catalog.ProcessHardPart(generatedCatalogPath);
                             return;
                         }
                         else

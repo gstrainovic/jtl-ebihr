@@ -1,13 +1,16 @@
 using System.IO.Compression;
 
-public class Catalog {
+public class Catalog
+{
 
-    public static void ProcessGeneratedCatalog(string filePath) {
+    public static void ProcessHardPart(string filePath)
+    {
 
-        string catalogTempDir = Path.Combine(Config.tempPath, "catalog");
+        string catalogTempDir = Path.Combine(Config.tempPath, "HardPart");
 
         // cleanup the temp folder
-        if (Directory.Exists(catalogTempDir)) {
+        if (Directory.Exists(catalogTempDir))
+        {
             Directory.Delete(catalogTempDir, true);
         }
 
@@ -18,29 +21,48 @@ public class Catalog {
         Logger.Info($"Extracting {filePath} to {catalogTempDir}");
         ZipFile.ExtractToDirectory(filePath, catalogTempDir);
 
-
-        // // split the csv into multiple csv files
-        // foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv")) {
-        //     Logger.Info($"Processing {file}");
-        //     // Split this CSV file into 1 MB chunks.
-        //     Csv.SplitCSV(file);
-        //     //  delete the original file
-        //     File.Delete(file);
-        // }
-
         Csv csv = new Csv();
+        csv.AddLieferant(catalogTempDir);
         csv.GenerateBrands(catalogTempDir);
-        return;
 
         // send all files from catalogTempDir to Ameise
         var ameise = new Ameise();
-        foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv")) {
+        foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
+        {
             Logger.Info($"Processing {file}");
             ameise.importHardParts(file);
         }
-
-
     }
-        
+
+    public static void ProcessRiderGear(string filePath)
+    {
+
+        string catalogTempDir = Path.Combine(Config.tempPath, "RiderGear");
+
+        // cleanup the temp folder
+        if (Directory.Exists(catalogTempDir))
+        {
+            Directory.Delete(catalogTempDir, true);
+        }
+
+        // create the temp folder
+        Directory.CreateDirectory(catalogTempDir);
+
+        // print extract the zip file to the temp folder
+        Logger.Info($"Extracting {filePath} to {catalogTempDir}");
+        ZipFile.ExtractToDirectory(filePath, catalogTempDir);
+
+        Csv csv = new Csv();
+        csv.AddLieferant(catalogTempDir);
+
+        // send all files from catalogTempDir to Ameise
+        var ameise = new Ameise();
+        foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
+        {
+            Logger.Info($"Processing {file}");
+            ameise.importHardParts(file);
+        }
+    }
+
 
 }

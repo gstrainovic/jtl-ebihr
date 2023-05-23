@@ -27,6 +27,62 @@ class Csv
             return;
         }
     }
+
+    // Transform the CSV files with the new column "Lieferant" = "Bihr"
+    public void AddLieferant(string catalogTempDir)
+    {
+        foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
+        {
+            var targetRecords = new List<CatalogHardPartsTarget>();
+
+            using (var reader = new StreamReader(file))
+            using (var csvReader = new CsvReader(reader, config))
+            {
+                var sourceRecords = csvReader.GetRecords<CatalogHardPartsSource>();
+
+                foreach (var record in sourceRecords)
+                {
+                    var targetRecord = new CatalogHardPartsTarget
+                    {
+                        ProductCode = record.ProductCode,
+                        SupplierProductCode = record.SupplierProductCode,
+                        Brand = record.Brand,
+                        MainCategory = record.MainCategory,
+                        ProductName = record.ProductName,
+                        Designation = record.Designation,
+                        Weight = record.Weight,
+                        RetailPriceIncludingTax = record.RetailPriceIncludingTax,
+                        RetailPriceExcludingTax = record.RetailPriceExcludingTax,
+                        BaseDealerPriceExcludingTax = record.BaseDealerPriceExcludingTax,
+                        BarCode = record.BarCode,
+                        SalesMultiple = record.SalesMultiple,
+                        StockLevel = record.StockLevel,
+                        DefaultPicture = record.DefaultPicture,
+                        NewPartNumber = record.NewPartNumber,
+                        StockValue = record.StockValue,
+                        CommodityCode = record.CommodityCode,
+                        Lieferant = "Bihr" // Add the new column "Lieferant" with the value "Bihr"
+                    };
+
+                    targetRecords.Add(targetRecord);
+                }
+            }
+
+            // Write the transformed records to a new CSV file with the updated column
+            string targetFilePath = Path.Combine(catalogTempDir, Path.GetFileNameWithoutExtension(file) + "_target.csv");
+            using (var writer = new StreamWriter(targetFilePath))
+            using (var csvWriter = new CsvWriter(writer, config))
+            {
+                csvWriter.WriteRecords(targetRecords);
+            }
+
+            Logger.Info($"Transformed CSV file: {targetFilePath}");
+
+            // delete the original CSV file
+            File.Delete(file);
+        }
+    }
+
     public void GenerateBrands(string catalogTempDir)
     {
 
@@ -100,54 +156,7 @@ class Csv
             ameise.importBrands(importBrandsFilePath);
         }
 
-        // Transform the CSV files with the new column "Lieferant" = "Bihr"
-        foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
-        {
-            var targetRecords = new List<CatalogHardPartsTarget>();
-
-            using (var reader = new StreamReader(file))
-            using (var csvReader = new CsvReader(reader, config))
-            {
-                var sourceRecords = csvReader.GetRecords<CatalogHardPartsSource>();
-
-                foreach (var record in sourceRecords)
-                {
-                    var targetRecord = new CatalogHardPartsTarget
-                    {
-                        ProductCode = record.ProductCode,
-                        SupplierProductCode = record.SupplierProductCode,
-                        Brand = record.Brand,
-                        MainCategory = record.MainCategory,
-                        ProductName = record.ProductName,
-                        Designation = record.Designation,
-                        Weight = record.Weight,
-                        RetailPriceIncludingTax = record.RetailPriceIncludingTax,
-                        RetailPriceExcludingTax = record.RetailPriceExcludingTax,
-                        BaseDealerPriceExcludingTax = record.BaseDealerPriceExcludingTax,
-                        BarCode = record.BarCode,
-                        SalesMultiple = record.SalesMultiple,
-                        StockLevel = record.StockLevel,
-                        DefaultPicture = record.DefaultPicture,
-                        NewPartNumber = record.NewPartNumber,
-                        StockValue = record.StockValue,
-                        CommodityCode = record.CommodityCode,
-                        Lieferant = "Bihr" // Add the new column "Lieferant" with the value "Bihr"
-                    };
-
-                    targetRecords.Add(targetRecord);
-                }
-            }
-
-            // Write the transformed records to a new CSV file with the updated column
-            string targetFilePath = Path.Combine(catalogTempDir, Path.GetFileNameWithoutExtension(file) + "_target.csv");
-            using (var writer = new StreamWriter(targetFilePath))
-            using (var csvWriter = new CsvWriter(writer, config))
-            {
-                csvWriter.WriteRecords(targetRecords);
-            }
-
-            Logger.Info($"Transformed CSV file: {targetFilePath}");
-        }
+        
 
     }
 
@@ -213,7 +222,6 @@ class Csv
         public string Lieferant { get; set; } = "Bihr";
 
     }
-
 
     public class CatalogHardPartsSource
     {

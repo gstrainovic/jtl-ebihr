@@ -47,7 +47,7 @@ class Csv
             using (var reader = new StreamReader(file))
             using (var csv = new CsvReader(reader, config))
             {
-                var records = csv.GetRecords<Catalog>();
+                var records = csv.GetRecords<CatalogHardParts>();
 
                 foreach (var record in records)
                 {
@@ -116,7 +116,7 @@ class Csv
         }
     }
 
-    public class Catalog
+    public class CatalogExtendedReferences
     {
         public string? CategoryPath { get; set; }
         public string? ProductId { get; set; }
@@ -144,6 +144,30 @@ class Csv
         public string? Key { get; set; }
         public string? Value { get; set; }
         public string? NewPartNumber { get; set; }
+        public string? CommodityCode { get; set; }
+    }
+
+    // ProductCode,SupplierProductCode,Brand,MainCategory,ProductName,Designation,Weight,
+    // RetailPriceIncludingTax,RetailPriceExcludingTax,BaseDealerPriceExcludingTax,BarCode,SalesMultiple,
+    // StockLevel,DefaultPicture,NewPartNumber,StockValue,CommodityCode																
+    public class CatalogHardParts
+    {
+        public string? ProductCode { get; set; }
+        public string? SupplierProductCode { get; set; }
+        public string? Brand { get; set; }
+        public string? MainCategory { get; set; }
+        public string? ProductName { get; set; }
+        public string? Designation { get; set; }
+        public int Weight { get; set; }
+        public decimal RetailPriceIncludingTax { get; set; }
+        public decimal RetailPriceExcludingTax { get; set; }
+        public decimal BaseDealerPriceExcludingTax { get; set; }
+        public string? BarCode { get; set; }
+        public int SalesMultiple { get; set; }
+        public string? StockLevel { get; set; }
+        public string? DefaultPicture { get; set; }
+        public string? NewPartNumber { get; set; }
+        public int StockValue { get; set; }
         public string? CommodityCode { get; set; }
     }
 }

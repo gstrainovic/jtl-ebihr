@@ -392,6 +392,12 @@ namespace Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
+                            string generatedCatalogPath = Path.Combine(Config.tempPath, "generatedCatalog.zip");
+                            using (var fileStream = new FileStream(generatedCatalogPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                            {
+                                await response_.Content.CopyToAsync(fileStream).ConfigureAwait(false);
+                            }
+                            Catalog.ProcessGeneratedCatalog(generatedCatalogPath);
                             return;
                         }
                         else

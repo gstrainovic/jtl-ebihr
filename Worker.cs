@@ -31,31 +31,33 @@ public class Worker : BackgroundService
             var catalogClient = new Client.CatalogClient(Config.url, httpClient);
 
             // get the ticketId from the catalog
-            var ticket = await catalogClient.PostRequestAsync(
-                CompressionType.ZIP,
-                SerializationType.CSV,
-                CatalogType.ExtendedReferences,
-                CatalogCompletion.Full
-            );
+            // var ticket = await catalogClient.PostRequestAsync(
+            //     CompressionType.ZIP,
+            //     SerializationType.CSV,
+            //     CatalogType.ExtendedReferences,
+            //     CatalogCompletion.Full
+            // );
 
-            // log the ticketId for download the catalog
-            Logger.Info($"TicketId: {ticket.TicketId}");
+            await catalogClient.PostEssentialHardPartRequestAsync();
 
-            // repeat the get downloadId until the download is ready
-            var download = await catalogClient.GetGenerationStatusAsync(ticket.TicketId);
-            while (download.RequestStatus != "DONE")
-            {
-                Logger.Info($"Status: {download.RequestStatus}, DownloadId: {download.DownloadId}");
-                Logger.Info("Waiting 1s for download to be ready");
-                await Task.Delay(1000);
-                download = await catalogClient.GetGenerationStatusAsync(ticket.TicketId);
-                Logger.Info($"Status: {download.RequestStatus}, DownloadId: {download.DownloadId}");
-            }
-            // log the DownloadId for download the catalog
-            Logger.Info($"DownloadId: {download.DownloadId}");
+            // // log the ticketId for download the catalog
+            // Logger.Info($"TicketId: {ticket.TicketId}");
 
-            // request the download and start the processing
-            await catalogClient.GetGeneratedFileAsync(download.DownloadId);
+            // // repeat the get downloadId until the download is ready
+            // var download = await catalogClient.GetGenerationStatusAsync(ticket.TicketId);
+            // while (download.RequestStatus != "DONE")
+            // {
+            //     Logger.Info($"Status: {download.RequestStatus}, DownloadId: {download.DownloadId}");
+            //     Logger.Info("Waiting 1s for download to be ready");
+            //     await Task.Delay(1000);
+            //     download = await catalogClient.GetGenerationStatusAsync(ticket.TicketId);
+            //     Logger.Info($"Status: {download.RequestStatus}, DownloadId: {download.DownloadId}");
+            // }
+            // // log the DownloadId for download the catalog
+            // Logger.Info($"DownloadId: {download.DownloadId}");
+
+            // // request the download and start the processing
+            // await catalogClient.GetGeneratedFileAsync(download.DownloadId);
 
             Logger.Info("Waiting 60s before starting the next run");
             await Task.Delay(60_000, stoppingToken);

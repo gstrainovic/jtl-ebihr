@@ -48,14 +48,25 @@ public class Ameise
         {
             File.Delete(logFilePath);
         }
-
-        var args = $"--server={Secret.SQLServerName} --database={Secret.SQLDatabaseName} --dbuser={Secret.SQLUserName} --dbpass={Secret.SQLPassword} --templateid={template} --inputfile={inputfile} --log={logFilePath} --nostdout";
-        // call JTL-wawi-ameise.exe with the arguments
-        var process = Process.Start(Config.ameiseExe, args);
-        process.WaitForExit();
-        // log the log
-        var log = File.ReadAllText(logFilePath);
-        Logger.Info(log);
+        
+        // on error stop the process
+        var process = new Process();
+        try {
+            var args = $"--server={Secret.SQLServerName} --database={Secret.SQLDatabaseName} --dbuser={Secret.SQLUserName} --dbpass={Secret.SQLPassword} --templateid={template} --inputfile={inputfile} --log={logFilePath}";
+            // var process = Process.Start(Config.ameiseExe, args);
+            process.StartInfo.FileName = Config.ameiseExe;
+            process.StartInfo.Arguments = args;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.WaitForExit();
+            var log = File.ReadAllText(logFilePath);
+            Logger.Info(log);
+        } catch (Exception e) {
+            process.Kill();
+            Logger.Error(e.Message);
+            return;
+        }
     }
 
     public void importBrands(string importBrandsFilePath)
@@ -63,4 +74,12 @@ public class Ameise
         // run the import of the brands
         run(Config.AmeiseBrandVorlageId, importBrandsFilePath);
     }
+
+    public void importHardParts(string importBrandsFilePath)
+    {
+        // run the import of the brands
+        run(Config.AmeiseHardPartVorlageId, importBrandsFilePath);
+    }
+
+
 }

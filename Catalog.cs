@@ -21,5 +21,15 @@ public class Catalog {
         Csv csv = new Csv();
         csv.GenerateBrands(catalogTempDir);
 
+        // send all files from catalogTempDir to Ameise
+        var ameise = new Ameise();
+        foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv")) {
+            Logger.Info($"Processing {file}");
+            ameise.importHardParts(file);
+        }
+
+
     }
+        
+
 }

@@ -9,6 +9,8 @@ using JtlDbModels;
 class Csv
 {
     CsvConfiguration? config;
+    Ameise ameise = new Ameise();
+
 
     public Csv() {
 
@@ -29,6 +31,8 @@ class Csv
             return;
         }
     }
+
+
 
     public void GenerateBrands(string catalogTempDir)
     {
@@ -101,7 +105,6 @@ class Csv
 
         if (importBrandsFileExists && importBrandsFilePath != null)
         {
-            Ameise ameise = new Ameise();
             ameise.importBrands(importBrandsFilePath);
         }
 
@@ -147,9 +150,6 @@ class Csv
         public string? CommodityCode { get; set; }
     }
 
-    // ProductCode,SupplierProductCode,Brand,MainCategory,ProductName,Designation,Weight,
-    // RetailPriceIncludingTax,RetailPriceExcludingTax,BaseDealerPriceExcludingTax,BarCode,SalesMultiple,
-    // StockLevel,DefaultPicture,NewPartNumber,StockValue,CommodityCode																
     public class CatalogHardParts
     {
         public string? ProductCode { get; set; }

@@ -38,7 +38,10 @@ public class Worker : BackgroundService
             //     CatalogCompletion.Full
             // );
 
+            // throw new NotImplementedException();
+            // todo add also the other catalogs
             await catalogClient.PostEssentialHardPartRequestAsync();
+            await catalogClient.PostEssentialRiderGearRequestAsync();
 
             // // log the ticketId for download the catalog
             // Logger.Info($"TicketId: {ticket.TicketId}");

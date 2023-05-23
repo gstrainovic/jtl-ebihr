@@ -2,15 +2,15 @@ using Microsoft.EntityFrameworkCore;
 
 public class LoggingContext : DbContext
 {
-    public DbSet<Log> Logs { get; set; }
+    public DbSet<BihrImportLog> BihrImportLogs { get; set; }
 
     // The following configures EF to create a Sqlite database file in the
     // special "local" folder for your platform.
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseSqlite($"Data Source={Config.dbPath}");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer(Secret.OptionsBuilderString);
 }
 
-public class Log
+public class BihrImportLog
 {
     public int Id { get; set; }
     public string? Message { get; set; }

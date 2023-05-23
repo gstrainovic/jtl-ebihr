@@ -5,7 +5,7 @@ class Logger
         Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - {level} - {message}");
         using (var db = new LoggingContext())
         {
-            db.Logs.Add(new Log { Message = message , Level = level, Created = DateTime.Now });
+            db.BihrImportLogs.Add(new BihrImportLog { Message = message , Level = level, Created = DateTime.Now });
             db.SaveChanges();
         }
     }

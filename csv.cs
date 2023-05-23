@@ -9,6 +9,9 @@ class Csv
 {
     CsvConfiguration? config;
     Ameise ameise = new Ameise();
+
+    Logger _logger  = new Logger();
+
     public Csv()
     {
         config = new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -23,7 +26,8 @@ class Csv
         };
         if (config == null)
         {
-            Logger.Error("config is null");
+            // Logger.Error("config is null");
+            _logger.LogError("config is null");
             return;
         }
     }
@@ -76,7 +80,7 @@ class Csv
                 csvWriter.WriteRecords(targetRecords);
             }
 
-            Logger.Info($"Transformed CSV file: {targetFilePath}");
+            _logger.LogInformation($"Transformed CSV file: {targetFilePath}");
 
             // delete the original CSV file
             File.Delete(file);
@@ -89,7 +93,8 @@ class Csv
         string importBrandsFilePath = Path.Combine(Config.tempPath, "importBrands.csv");
         if (importBrandsFilePath == null)
         {
-            Logger.Error("importBrandsFilePath is null");
+            // Logger.Error("importBrandsFilePath is null");
+            _logger.LogError("importBrandsFilePath is null");
             return;
         }
 
@@ -97,7 +102,7 @@ class Csv
 
         foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
         {
-            Logger.Info($"Processing {file}");
+            _logger.LogInformation($"Processing {file}");
             using (var reader = new StreamReader(file))
             using (var csv = new CsvReader(reader, config))
             {
@@ -125,14 +130,14 @@ class Csv
             if (!jtlBrands.Any(x => x.CName == bihrBrand.Name))
             {
                 importBrands.Add(new Brand { Name = bihrBrand.Name });
-                Logger.Info($"Brand {bihrBrand.Name} not found in JTL, added to {importBrandsFilePath}");
+                _logger.LogInformation($"Brand {bihrBrand.Name} not found in JTL, added to {importBrandsFilePath}");
             }
         }
 
         // save the import csv file if importBrands is not empty
         if (importBrands.Count == 0)
         {
-            Logger.Info($"No brands to import");
+            _logger.LogInformation($"No brands to import");
         }
         else
         {
@@ -145,7 +150,7 @@ class Csv
             using (var csv = new CsvWriter(writer, config))
             {
                 csv.WriteRecords(importBrands);
-                Logger.Info($"Saved {importBrandsFilePath}");
+                _logger.LogInformation($"Saved {importBrandsFilePath}");
             }
         }
 

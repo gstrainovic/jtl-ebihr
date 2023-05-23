@@ -4,16 +4,18 @@ using System.Reflection;
 public class Ameise
 {
 
+    Logger _logger  = new Logger();
+
     public Ameise()
     {
         // find JTL-wawi-ameise.exe in the JTL-Software folder
         var ameiseExe = Directory.GetFiles(Config.jtlSoftwarePath, Config.ameiseExe, SearchOption.AllDirectories).FirstOrDefault();
         if (ameiseExe == null)
         {
-            Logger.Error($"{Config.ameiseExe} not found in {Config.jtlSoftwarePath}");
+            // Logger.Error($"{Config.ameiseExe} not found in {Config.jtlSoftwarePath}");
+            _logger.LogError($"{Config.ameiseExe} not found in {Config.jtlSoftwarePath}");
             return;
         }
-
 
         // start a full sql backup of the JTL database
         // this is needed because the import of the brands will change the database
@@ -30,11 +32,12 @@ public class Ameise
         string logFilePath = Path.Combine(Config.tempPath, logFileName);
         if (logFilePath == null)
         {
-            Logger.Error("logFilePath is null");
+            // Logger.Error("logFilePath is null");
+            _logger.LogError("logFilePath is null");
             return;
         }
 
-        Logger.Info($"Running Ameise with template {template} and inputfile {inputfile}");
+        _logger.LogInformation($"Running Ameise with template {template} and inputfile {inputfile}");
  
         // change to the JTL-Software folder
         Directory.SetCurrentDirectory(Config.jtlSoftwarePath);
@@ -52,12 +55,8 @@ public class Ameise
         }
         catch (Exception e)
         {
-            Logger.Error(e.Message);
-            if (File.Exists(logFilePath))
-            {
-                var log = File.ReadAllText(logFilePath);
-                Logger.Error(log);
-            }
+            // Logger.Error(e.Message);
+            _logger.LogError(e.Message);
             // if process is still running kill it
             if (!process.HasExited)
             {

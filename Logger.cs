@@ -1,28 +1,22 @@
-class Logger
+using Serilog;
+
+public class Logger
 {
-    private static void Log(string message, LogLevel level)
+    public Logger()
     {
-        Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - {level} - {message}");
-        using (var db = new LoggingContext())
-        {
-            db.BihrImportLogs.Add(new BihrImportLog { Message = message , Level = level, Created = DateTime.Now });
-            db.SaveChanges();
-        }
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .WriteTo.File("C:\\temp\\jtl_bihr_log2_.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
     }
 
-    public static void Info(string message)
+    public void LogInformation(string message)
     {
-        Log(message, LogLevel.Info);
+        Log.Information(message);
     }
-
-    //Error
-    public static void Error(string message)
+    public void LogError(string message)
     {
-        Log(message, LogLevel.Error);
+        Log.Error(message);
     }
 }
-
-
-
-
-  

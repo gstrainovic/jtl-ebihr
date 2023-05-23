@@ -1,9 +1,11 @@
 using System.IO.Compression;
+using Microsoft.Extensions.Logging;
 
 public class Catalog
 {
+    Logger _logger  = new Logger();
 
-    public static void ProcessHardPart(string filePath)
+    public void ProcessHardPart(string filePath)
     {
 
         string catalogTempDir = Path.Combine(Config.tempPath, "HardPart");
@@ -18,7 +20,7 @@ public class Catalog
         Directory.CreateDirectory(catalogTempDir);
 
         // print extract the zip file to the temp folder
-        Logger.Info($"Extracting {filePath} to {catalogTempDir}");
+        _logger.LogInformation($"Extracting {filePath} to {catalogTempDir}");
         ZipFile.ExtractToDirectory(filePath, catalogTempDir);
 
         Csv csv = new Csv();
@@ -29,12 +31,12 @@ public class Catalog
         var ameise = new Ameise();
         foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
         {
-            Logger.Info($"Processing {file}");
+            _logger.LogInformation($"Processing {file}");
             ameise.importHardParts(file);
         }
     }
 
-    public static void ProcessRiderGear(string filePath)
+    public void ProcessRiderGear(string filePath)
     {
 
         string catalogTempDir = Path.Combine(Config.tempPath, "RiderGear");
@@ -49,7 +51,7 @@ public class Catalog
         Directory.CreateDirectory(catalogTempDir);
 
         // print extract the zip file to the temp folder
-        Logger.Info($"Extracting {filePath} to {catalogTempDir}");
+        _logger.LogInformation($"Extracting {filePath} to {catalogTempDir}");
         ZipFile.ExtractToDirectory(filePath, catalogTempDir);
 
         Csv csv = new Csv();
@@ -59,7 +61,7 @@ public class Catalog
         var ameise = new Ameise();
         foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
         {
-            Logger.Info($"Processing {file}");
+            _logger.LogInformation($"Processing {file}");
             ameise.importHardParts(file);
         }
     }

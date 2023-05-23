@@ -397,7 +397,8 @@ namespace Client
                             {
                                 await response_.Content.CopyToAsync(fileStream).ConfigureAwait(false);
                             }
-                            Catalog.ProcessHardPart(generatedCatalogPath);
+                            Catalog catalog = new Catalog();
+                            catalog.ProcessHardPart(generatedCatalogPath);
                             return;
                         }
                         else
@@ -518,7 +519,8 @@ namespace Client
                             {
                                 await response_.Content.CopyToAsync(fileStream).ConfigureAwait(false);
                             }
-                            Catalog.ProcessRiderGear(generatedCatalogPath);
+                            Catalog catalog = new Catalog();
+                            catalog.ProcessRiderGear(generatedCatalogPath);
                             return;
                         }
                         else
@@ -1326,7 +1328,8 @@ namespace Client
                             {
                                 await response_.Content.CopyToAsync(fileStream).ConfigureAwait(false);
                             }
-                            Catalog.ProcessHardPart(generatedCatalogPath);
+                            Catalog catalog = new Catalog();
+                            catalog.ProcessHardPart(generatedCatalogPath);
                             return;
                         }
                         else

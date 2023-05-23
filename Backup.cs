@@ -4,15 +4,17 @@ using Microsoft.EntityFrameworkCore;
 
 public class Backup {
 
+    Logger _logger  = new Logger();
+
     string backupFilePath = Path.Combine(Config.tempPath, "EazyBusiness.bak");
 
     public void FullBackup() {
         // create a full backup of the EazyBusinessContext database
-        Logger.Info("Creating a full backup of the JTL database");
+        _logger.LogInformation("Creating a full backup of the JTL database");
 
         // zip the old backup file if it exists
         if (File.Exists(backupFilePath)) {
-            Logger.Info($"Zipping {backupFilePath}");
+            _logger.LogInformation($"Zipping {backupFilePath}");
             if (File.Exists(backupFilePath + ".zip")) {
                 File.Delete(backupFilePath + ".zip");
             }
@@ -21,7 +23,7 @@ public class Backup {
                     archive.CreateEntryFromFile(backupFilePath, Path.GetFileName(backupFilePath));
                 }
             }
-            Logger.Info($"Deleting {backupFilePath}");
+            _logger.LogInformation($"Deleting {backupFilePath}");
             File.Delete(backupFilePath);
         }
 

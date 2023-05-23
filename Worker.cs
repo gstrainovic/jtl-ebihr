@@ -5,12 +5,20 @@ using Client;
 
 public class Worker : BackgroundService
 {
+    private readonly ILogger<Worker> _logger;
+
+    public Worker(ILogger<Worker> logger)
+    {
+        _logger = logger;
+    }
+
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            Logger.Info("Worker running");
+            _logger.LogInformation("Worker running");
 
 
             // create the temp folder if it does not exist
@@ -44,25 +52,25 @@ public class Worker : BackgroundService
             await catalogClient.PostEssentialRiderGearRequestAsync();
 
             // // log the ticketId for download the catalog
-            // Logger.Info($"TicketId: {ticket.TicketId}");
+            // _logger.LogInformation($"TicketId: {ticket.TicketId}");
 
             // // repeat the get downloadId until the download is ready
             // var download = await catalogClient.GetGenerationStatusAsync(ticket.TicketId);
             // while (download.RequestStatus != "DONE")
             // {
-            //     Logger.Info($"Status: {download.RequestStatus}, DownloadId: {download.DownloadId}");
-            //     Logger.Info("Waiting 1s for download to be ready");
+            //     _logger.LogInformation($"Status: {download.RequestStatus}, DownloadId: {download.DownloadId}");
+            //     _logger.LogInformation("Waiting 1s for download to be ready");
             //     await Task.Delay(1000);
             //     download = await catalogClient.GetGenerationStatusAsync(ticket.TicketId);
-            //     Logger.Info($"Status: {download.RequestStatus}, DownloadId: {download.DownloadId}");
+            //     _logger.LogInformation($"Status: {download.RequestStatus}, DownloadId: {download.DownloadId}");
             // }
             // // log the DownloadId for download the catalog
-            // Logger.Info($"DownloadId: {download.DownloadId}");
+            // _logger.LogInformation($"DownloadId: {download.DownloadId}");
 
             // // request the download and start the processing
             // await catalogClient.GetGeneratedFileAsync(download.DownloadId);
 
-            Logger.Info("Waiting 24h for next run");
+            _logger.LogInformation("Waiting 24h for next run");
             await Task.Delay(1000 * 60 * 60 * 24, stoppingToken);
         }
 

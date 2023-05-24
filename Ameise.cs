@@ -69,12 +69,12 @@ public class AmeiseImport : Config
 
     public void importBrands(string importBrandsFilePath)
     {
-        run(jtl.ameise.brand_vorlage_id, importBrandsFilePath);
+        // run(jtl.ameise.brand_vorlage_id, importBrandsFilePath);
     }
 
     public void importHardPartsAndRiderGears(string importBrandsFilePath)
     {
-        run(jtl.ameise.hard_part_vorlage_id, importBrandsFilePath);
+        // run(jtl.ameise.hard_part_vorlage_id, importBrandsFilePath);
     }
 
 

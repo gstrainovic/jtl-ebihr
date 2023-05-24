@@ -484,3 +484,4 @@ temp/*
 sqlite.*
 Secret.cs
 Env.yaml
+_env.yaml

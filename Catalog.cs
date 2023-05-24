@@ -3,12 +3,10 @@ using Microsoft.Extensions.Logging;
 
 public class Catalog : Config
 {
-    Logger _logger  = new Logger();
+    Logger _logger = new Logger();
 
     public void ProcessHardPart(string filePath)
     {
-        // Config config = new Config();
-        // string temp = config.env.config?.temp ?? throw new System.Exception("temp not set in Env.yaml");
 
         string catalogTempDir = Path.Combine(this.jtl_bihr.temp_path, "HardPart");
 
@@ -27,14 +25,21 @@ public class Catalog : Config
 
         Csv csv = new Csv();
         csv.AddLieferant(catalogTempDir);
-        csv.GenerateBrands(catalogTempDir);
+
+        if (jtl_bihr.hersteller_importieren == 1)
+        {
+            csv.GenerateBrands(catalogTempDir);
+        }
 
         // send all files from catalogTempDir to Ameise
-        var ameise = new AmeiseImport();
-        foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
+        if (jtl_bihr.artikel_importieren == 1)
         {
-            _logger.LogInformation($"Processing {file}");
-            ameise.importHardPartsAndRiderGears(file);
+            var ameise = new AmeiseImport();
+            foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
+            {
+                _logger.LogInformation($"Processing {file}");
+                ameise.importHardPartsAndRiderGears(file);
+            }
         }
     }
 
@@ -60,11 +65,14 @@ public class Catalog : Config
         csv.AddLieferant(catalogTempDir);
 
         // send all files from catalogTempDir to Ameise
-        var ameise = new AmeiseImport();
-        foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
+        if (jtl_bihr.artikel_importieren == 1)
         {
-            _logger.LogInformation($"Processing {file}");
-            ameise.importHardPartsAndRiderGears(file);
+            var ameise = new AmeiseImport();
+            foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
+            {
+                _logger.LogInformation($"Processing {file}");
+                ameise.importHardPartsAndRiderGears(file);
+            }
         }
     }
 

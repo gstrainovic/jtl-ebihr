@@ -19,8 +19,12 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-     <None Update="Env.yaml" CopyToOutputDirectory="Always" />
-     <PackageReference Include="Serilog.Extensions.Hosting" Version="7.0.0" />
+     <None Update="_env.yaml" CopyToOutputDirectory="Always" />
+	  <None Update="_ameise_vorlage_bihr-artikel.csv" CopyToOutputDirectory="Always" />
+	  <None Update="_beispiel_bihr_brands.csv" CopyToOutputDirectory="Always" />
+	  <None Update="_beispiel_bihr_hardpart.csv" CopyToOutputDirectory="Always" />
+	  <None Update="_beispiel_bihr_ridergear.csv" CopyToOutputDirectory="Always" />
+	  <PackageReference Include="Serilog.Extensions.Hosting" Version="7.0.0" />
      <PackageReference Include="Serilog.Settings.Configuration" Version="7.0.0" />
      <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
      <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />

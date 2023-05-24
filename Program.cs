@@ -11,8 +11,4 @@ IHost host = Host.CreateDefaultBuilder(args)
     .Enrich.FromLogContext()) // <-- This line adds support for structured logging
     .Build();
 
-
-
-
-
 host.Run();

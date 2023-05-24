@@ -17,49 +17,49 @@ public class Config
         var deserializer = new DeserializerBuilder()
         .WithNamingConvention(UnderscoredNamingConvention.Instance)  
         .Build();
-        var file = File.ReadAllText("Env.yaml");
+        var file = File.ReadAllText("_env.yaml");
         var env = deserializer.Deserialize<Env>(file);
 
         // check if all required values are set
         if (env.jtl.ameise.exe == "") {
-            throw new System.Exception("ameise.exe not set in Env.yaml");
+            throw new System.Exception("ameise.exe not set in _env.yaml");
         }
         if (env.jtl.ameise?.hard_part_vorlage_id == "") {
-            throw new System.Exception("hardPartVorlageId not set in Env.yaml");
+            throw new System.Exception("hardPartVorlageId not set in _env.yaml");
         }
         if (env.jtl.ameise?.brand_vorlage_id == "") {
-            throw new System.Exception("brandVorlageId not set in Env.yaml");
+            throw new System.Exception("brandVorlageId not set in _env.yaml");
         }
         if (env.jtl.software_path == "") {
-            throw new System.Exception("softwarePath not set in Env.yaml");
+            throw new System.Exception("softwarePath not set in _env.yaml");
         }
         if (env.sql.server_name == "") {
-            throw new System.Exception("serverName not set in Env.yaml");
+            throw new System.Exception("serverName not set in _env.yaml");
         }
         if (env.sql.user_name == "") {
-            throw new System.Exception("userName not set in Env.yaml");
+            throw new System.Exception("userName not set in _env.yaml");
         }
         if (env.sql.password == "") {
-            throw new System.Exception("password not set in Env.yaml");
+            throw new System.Exception("password not set in _env.yaml");
         }
         if (env.sql.databaseName == "") {
-            throw new System.Exception("databaseName not set in Env.yaml");
+            throw new System.Exception("databaseName not set in _env.yaml");
         }
         if (env.jtl_bihr.temp_path == "") {
-            throw new System.Exception("tempPath not set in Env.yaml");
+            throw new System.Exception("tempPath not set in _env.yaml");
         }
         if (env.bihr.url == "") {
-            throw new System.Exception("url not set in Env.yaml");
+            throw new System.Exception("url not set in _env.yaml");
         }
         if (env.bihr.user_name == "") {
-            throw new System.Exception("username not set in Env.yaml");
+            throw new System.Exception("username not set in _env.yaml");
         }
         if (env.bihr.password == "") {
-            throw new System.Exception("password not set in Env.yaml");
+            throw new System.Exception("password not set in _env.yaml");
         }
 
 
-        this.jtl = env.jtl ?? throw new System.Exception("jtl not set in Env.yaml");
+        this.jtl = env.jtl ?? throw new System.Exception("jtl not set in _env.yaml");
         this.ameise = this.jtl.ameise;
         this.sql = env.sql;
         this.jtl_bihr = env.jtl_bihr;
@@ -92,6 +92,8 @@ public class sql
 public class jtl_bihr
 {
     public string temp_path { get; set; } = "";
+    public int hersteller_importieren { get; set; } = 0;
+    public int artikel_importieren { get; set; } = 0;
 }
 
 public class bihr

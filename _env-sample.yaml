@@ -13,6 +13,8 @@ sql:
 
 jtl_bihr:
   temp_path: C:\Temp\jtl-bihr
+  hersteller_importieren: 0
+  artikel_importieren: 1
 
 bihr:
   url: https://api.bihr.net

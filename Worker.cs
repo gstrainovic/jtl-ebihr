@@ -5,25 +5,6 @@ using Client;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-public class Person
-{
-    public string name { get; set; } = "";
-    public int age { get; set; }
-    public Address? addresses { get; set; } = new Address();
-}
-
-public class Address
-{
-    public HomeAdress? home_adress { get; set; } = new HomeAdress();
-}
-
-public class HomeAdress
-{
-    public string street_street { get; set; } = "";
-    public string city { get; set; } = "";
-    public string state { get; set; } = "";
-    public int zip { get; set; }
-}
 
 public class Worker : BackgroundService
 {
@@ -37,24 +18,6 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var yml = @"
-        name: George Washington
-        age: 89
-        addresses:
-          home_adress:
-            street_street: 400 Mockingbird Lane
-            city: Louaryland
-            state: Hawidaho
-            zip: 99970
-        ";
-
-        var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)  // see height_in_inches in sample yml 
-            .Build();
-
-        //yml contains a string containing your YAML
-        var p = deserializer.Deserialize<Person>(yml);
-        System.Console.WriteLine($"{p.name} is {p.age} years old");
 
         // while (!stoppingToken.IsCancellationRequested)
         _logger.LogInformation("Worker running");

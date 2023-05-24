@@ -39,6 +39,9 @@ public class AmeiseImport : Config
 
         _logger.LogInformation($"Running Ameise with template {template} and inputfile {inputfile}");
  
+        // get current directory
+        var currentDirectory = Directory.GetCurrentDirectory();
+
         // change to the JTL-Software folder
         Directory.SetCurrentDirectory( jtl.software_path);
 
@@ -62,19 +65,22 @@ public class AmeiseImport : Config
             {
                 process.Kill();
             }
-
-            return;
+        }
+        finally
+        {
+            // change back to the original directory
+            Directory.SetCurrentDirectory(currentDirectory);
         }
     }
 
     public void importBrands(string importBrandsFilePath)
     {
-        // run(jtl.ameise.brand_vorlage_id, importBrandsFilePath);
+        run(jtl.ameise.brand_vorlage_id, importBrandsFilePath);
     }
 
     public void importHardPartsAndRiderGears(string importBrandsFilePath)
     {
-        // run(jtl.ameise.hard_part_vorlage_id, importBrandsFilePath);
+        run(jtl.ameise.hard_part_vorlage_id, importBrandsFilePath);
     }
 
 

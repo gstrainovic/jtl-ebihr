@@ -7,7 +7,7 @@ public class Logger
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .WriteTo.Console()
-            .WriteTo.File("C:\\temp\\jtl_bihr_log2_.txt", rollingInterval: RollingInterval.Day)
+            .WriteTo.File("C:\\temp\\jtl-bihr\\logs\\jtl_bihr_log2_.txt", rollingInterval: RollingInterval.Day)
             .CreateLogger();
     }
 

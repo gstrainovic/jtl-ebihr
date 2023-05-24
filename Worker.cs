@@ -8,12 +8,12 @@ using YamlDotNet.Serialization.NamingConventions;
 
 public class Worker : BackgroundService
 {
+    private readonly IHostApplicationLifetime _hostApplicationLifetime;
     private readonly ILogger<Worker> _logger;
 
-    public Worker(ILogger<Worker> logger)
-    {
-        _logger = logger;
-    }
+    public Worker(
+        IHostApplicationLifetime hostApplicationLifetime, ILogger<Worker> logger) =>
+        (_hostApplicationLifetime, _logger) = (hostApplicationLifetime, logger);
 
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -72,7 +72,12 @@ public class Worker : BackgroundService
         // // request the download and start the processing
         // await catalogClient.GetGeneratedFileAsync(download.DownloadId);
 
-        _logger.LogInformation("worker finished");
+        _logger.LogInformation("worker finished!");
 
+        // wait 5 seconds before stopping the application
+        await Task.Delay(5000);
+         _hostApplicationLifetime.StopApplication();
+         
+        return;
     }
 }

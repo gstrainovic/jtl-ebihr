@@ -483,3 +483,4 @@ Env.fs
 temp/*
 sqlite.*
 Secret.cs
+Env.yaml

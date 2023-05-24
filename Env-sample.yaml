@@ -1,0 +1,21 @@
+jtl:
+  softwarePath: C:\Program Files (x86)\JTL-Software
+  ameise:
+    exe: JTL-wawi-ameise.exe
+    hardPartVorlageId: IMP1
+    brandVorlageId: IMP2
+
+sql:
+  serverName: LAPTOP-Q593BSP3\\JTLWAWI
+  userName: sa
+  password: sa04jT14
+  databaseName: EazyBusiness
+
+config:
+  temp: C:\Temp\jtl-bihr
+
+bihr:
+  url: https://api.bihr.net
+  username: username@example.com
+  password: 123fdsf
+

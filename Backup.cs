@@ -2,13 +2,12 @@ using System.IO.Compression;
 using JtlDbModels;
 using Microsoft.EntityFrameworkCore;
 
-public class Backup {
-
+public class Backup : Config
+{
     Logger _logger  = new Logger();
 
-    string backupFilePath = Path.Combine(Config.tempPath, "EazyBusiness.bak");
-
     public void FullBackup() {
+        string backupFilePath = Path.Combine(jtl_bihr.temp_path, "EazyBusiness.bak");
         // create a full backup of the EazyBusinessContext database
         _logger.LogInformation("Creating a full backup of the JTL database");
 

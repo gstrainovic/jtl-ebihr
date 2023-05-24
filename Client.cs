@@ -392,7 +392,9 @@ namespace Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            string generatedCatalogPath = Path.Combine(Config.tempPath, "HardPart.zip");
+                            Config config = new Config();
+
+                            string generatedCatalogPath = Path.Combine(config.jtl_bihr.temp_path, "HardPart.zip");
                             using (var fileStream = new FileStream(generatedCatalogPath, FileMode.Create, FileAccess.Write, FileShare.None))
                             {
                                 await response_.Content.CopyToAsync(fileStream).ConfigureAwait(false);
@@ -514,7 +516,8 @@ namespace Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            string generatedCatalogPath = Path.Combine(Config.tempPath, "RiderGear.zip");
+                            Config config = new Config();
+                            string generatedCatalogPath = Path.Combine(config.jtl_bihr.temp_path, "RiderGear.zip");
                             using (var fileStream = new FileStream(generatedCatalogPath, FileMode.Create, FileAccess.Write, FileShare.None))
                             {
                                 await response_.Content.CopyToAsync(fileStream).ConfigureAwait(false);
@@ -1323,7 +1326,8 @@ namespace Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            string generatedCatalogPath = Path.Combine(Config.tempPath, "generatedCatalog.zip");
+                            Config config = new Config();
+                            string generatedCatalogPath = Path.Combine(config.jtl_bihr.temp_path, "generatedCatalog.zip");
                             using (var fileStream = new FileStream(generatedCatalogPath, FileMode.Create, FileAccess.Write, FileShare.None))
                             {
                                 await response_.Content.CopyToAsync(fileStream).ConfigureAwait(false);

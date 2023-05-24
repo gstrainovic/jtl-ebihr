@@ -5,16 +5,16 @@ using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
 using JtlDbModels;
-class Csv
+class Csv : Config
 {
-    CsvConfiguration? config;
-    Ameise ameise = new Ameise();
+    CsvConfiguration? csvconfig;
+    AmeiseImport _ameise = new AmeiseImport();
 
     Logger _logger  = new Logger();
 
     public Csv()
     {
-        config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        csvconfig = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             HasHeaderRecord = true,
             Delimiter = ",",
@@ -24,7 +24,7 @@ class Csv
             TrimOptions = TrimOptions.Trim,
             Encoding = Encoding.UTF8
         };
-        if (config == null)
+        if (csvconfig == null)
         {
             // Logger.Error("config is null");
             _logger.LogError("config is null");
@@ -40,7 +40,7 @@ class Csv
             var targetRecords = new List<CatalogHardPartsTarget>();
 
             using (var reader = new StreamReader(file))
-            using (var csvReader = new CsvReader(reader, config))
+            using (var csvReader = new CsvReader(reader, csvconfig))
             {
                 var sourceRecords = csvReader.GetRecords<CatalogHardPartsSource>();
 
@@ -75,7 +75,7 @@ class Csv
             // Write the transformed records to a new CSV file with the updated column
             string targetFilePath = Path.Combine(catalogTempDir, Path.GetFileNameWithoutExtension(file) + "_target.csv");
             using (var writer = new StreamWriter(targetFilePath))
-            using (var csvWriter = new CsvWriter(writer, config))
+            using (var csvWriter = new CsvWriter(writer, csvconfig))
             {
                 csvWriter.WriteRecords(targetRecords);
             }
@@ -90,7 +90,7 @@ class Csv
     public void GenerateBrands(string catalogTempDir)
     {
 
-        string importBrandsFilePath = Path.Combine(Config.tempPath, "importBrands.csv");
+        string importBrandsFilePath = Path.Combine(jtl_bihr.temp_path, "importBrands.csv");
         if (importBrandsFilePath == null)
         {
             // Logger.Error("importBrandsFilePath is null");
@@ -104,7 +104,7 @@ class Csv
         {
             _logger.LogInformation($"Processing {file}");
             using (var reader = new StreamReader(file))
-            using (var csv = new CsvReader(reader, config))
+            using (var csv = new CsvReader(reader, csvconfig))
             {
                 var records = csv.GetRecords<CatalogHardPartsSource>();
 
@@ -142,23 +142,23 @@ class Csv
         else
         {
             // delete the import csv file if it exists
-            if (File.Exists(Path.Combine(Config.tempPath, importBrandsFilePath)))
+            if (File.Exists(Path.Combine(jtl_bihr.temp_path, importBrandsFilePath)))
             {
-                File.Delete(Path.Combine(Config.tempPath, importBrandsFilePath));
+                File.Delete(Path.Combine(jtl_bihr.temp_path, importBrandsFilePath));
             }
-            using (var writer = new StreamWriter(Path.Combine(Config.tempPath, importBrandsFilePath)))
-            using (var csv = new CsvWriter(writer, config))
+            using (var writer = new StreamWriter(Path.Combine(jtl_bihr.temp_path, importBrandsFilePath)))
+            using (var csv = new CsvWriter(writer, csvconfig))
             {
                 csv.WriteRecords(importBrands);
                 _logger.LogInformation($"Saved {importBrandsFilePath}");
             }
         }
 
-        bool importBrandsFileExists = File.Exists(Path.Combine(Config.tempPath, importBrandsFilePath));
+        bool importBrandsFileExists = File.Exists(Path.Combine(jtl_bihr.temp_path, importBrandsFilePath));
 
         if (importBrandsFileExists && importBrandsFilePath != null)
         {
-            ameise.importBrands(importBrandsFilePath);
+            _ameise.importBrands(importBrandsFilePath);
         }
 
         

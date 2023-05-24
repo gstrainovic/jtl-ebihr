@@ -3629,8 +3629,11 @@ public partial class EazyBusinessContext : DbContext
 
     public virtual DbSet<ZZmListe> ZZmListes { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(Secret.OptionsBuilderString);
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
+    {
+        Config config = new Config();
+        optionsBuilder.UseSqlServer(config.optionsBuilderString);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

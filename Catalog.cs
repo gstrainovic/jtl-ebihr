@@ -1,14 +1,16 @@
 using System.IO.Compression;
 using Microsoft.Extensions.Logging;
 
-public class Catalog
+public class Catalog : Config
 {
     Logger _logger  = new Logger();
 
     public void ProcessHardPart(string filePath)
     {
+        // Config config = new Config();
+        // string temp = config.env.config?.temp ?? throw new System.Exception("temp not set in Env.yaml");
 
-        string catalogTempDir = Path.Combine(Config.tempPath, "HardPart");
+        string catalogTempDir = Path.Combine(this.jtl_bihr.temp_path, "HardPart");
 
         // cleanup the temp folder
         if (Directory.Exists(catalogTempDir))
@@ -28,18 +30,18 @@ public class Catalog
         csv.GenerateBrands(catalogTempDir);
 
         // send all files from catalogTempDir to Ameise
-        var ameise = new Ameise();
+        var ameise = new AmeiseImport();
         foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
         {
             _logger.LogInformation($"Processing {file}");
-            ameise.importHardParts(file);
+            ameise.importHardPartsAndRiderGears(file);
         }
     }
 
     public void ProcessRiderGear(string filePath)
     {
 
-        string catalogTempDir = Path.Combine(Config.tempPath, "RiderGear");
+        string catalogTempDir = Path.Combine(this.jtl_bihr.temp_path, "RiderGear");
 
         // cleanup the temp folder
         if (Directory.Exists(catalogTempDir))
@@ -58,11 +60,11 @@ public class Catalog
         csv.AddLieferant(catalogTempDir);
 
         // send all files from catalogTempDir to Ameise
-        var ameise = new Ameise();
+        var ameise = new AmeiseImport();
         foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
         {
             _logger.LogInformation($"Processing {file}");
-            ameise.importHardParts(file);
+            ameise.importHardPartsAndRiderGears(file);
         }
     }
 

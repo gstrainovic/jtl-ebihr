@@ -24,9 +24,9 @@ public class Worker : BackgroundService
 
         Config config = new Config();
         // create the temp folder if it does not exist
-        if (!Directory.Exists(config.jtl_bihr.temp_path))
+        if (!Directory.Exists(Config.temp_path))
         {
-            Directory.CreateDirectory(config.jtl_bihr.temp_path);
+            Directory.CreateDirectory(Config.temp_path);
         }
 
         var httpClient = new HttpClient();

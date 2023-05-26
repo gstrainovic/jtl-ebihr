@@ -7,9 +7,14 @@ public class Backup : Config
     Logger _logger  = new Logger();
 
     public void FullBackup() {
-        // string backupFilePath = Path.Combine(jtl_bihr.temp_path, "EazyBusiness.bak");
-        // backupFilePatch is iso YYYY-MM-DD-HH-mm-ss + EazyBusiness.bak
-        string backupFilePath = Path.Combine(jtl_bihr.temp_path, $"{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}-EazyBusiness.bak");
+
+        // create a backup folder if it doesn't exist
+        if (!Directory.Exists(Path.Combine(temp_path, "backups"))) {
+            Directory.CreateDirectory(Path.Combine(temp_path, "backups"));
+        }
+
+        string backupFilePath = Path.Combine(temp_path, "backups", $"{DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")}-EazyBusiness.bak");
+        
         // create a full backup of the EazyBusinessContext database
         _logger.LogInformation("Creating a full backup of the JTL database");
         using (var db = new EazyBusinessContext()) {

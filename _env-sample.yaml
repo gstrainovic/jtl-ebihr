@@ -2,8 +2,7 @@ jtl:
   software_path: C:\Program Files (x86)\JTL-Software
   ameise:
     exe: JTL-wawi-ameise.exe
-    hard_part_vorlage_id: IMP1
-    brand_vorlage_id: IMP2
+    ameise_vorlage_id: IMP1
 
 sql:
   server_name: LAPTOP-Q593BSP3\JTLWAWI
@@ -12,12 +11,10 @@ sql:
   database_name: EazyBusiness
 
 jtl_bihr:
-  temp_path: C:\Temp\jtl-bihr
-  hersteller_importieren: 0
-  artikel_importieren: 1
+  debug: 1
 
 bihr:
   url: https://api.bihr.net
-  user_name: my_email@example.com
+  user_name: myemail@example.com
   password: password
 

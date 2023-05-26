@@ -9,6 +9,7 @@ public class Config
     public jtl_bihr jtl_bihr { get; set; } = new jtl_bihr();
     public bihr bihr { get; set; } = new bihr();
     public string optionsBuilderString; 
+    public const string temp_path = @"C:\Temp\jtl-bihr";
 
     // public const string OptionsBuilderString = $"Data Source={SQLServerName};Initial Catalog={SQLDatabaseName};User ID={SQLUserName};Password={SQLPassword};TrustServerCertificate=True";
 
@@ -24,11 +25,8 @@ public class Config
         if (env.jtl.ameise.exe == "") {
             throw new System.Exception("ameise.exe not set in _env.yaml");
         }
-        if (env.jtl.ameise?.hard_part_vorlage_id == "") {
-            throw new System.Exception("hardPartVorlageId not set in _env.yaml");
-        }
-        if (env.jtl.ameise?.brand_vorlage_id == "") {
-            throw new System.Exception("brandVorlageId not set in _env.yaml");
+        if (env.jtl.ameise?.ameise_vorlage_id == null) {
+            throw new System.Exception("ameise_vorlage_id not set in _env.yaml");
         }
         if (env.jtl.software_path == "") {
             throw new System.Exception("softwarePath not set in _env.yaml");
@@ -44,9 +42,6 @@ public class Config
         }
         if (env.sql.databaseName == "") {
             throw new System.Exception("databaseName not set in _env.yaml");
-        }
-        if (env.jtl_bihr.temp_path == "") {
-            throw new System.Exception("tempPath not set in _env.yaml");
         }
         if (env.bihr.url == "") {
             throw new System.Exception("url not set in _env.yaml");
@@ -70,37 +65,35 @@ public class Config
 }
 public class ameise
 {
-    public string exe { get; set; } = "";
-    public string hard_part_vorlage_id { get; set; } = "";
-    public string brand_vorlage_id { get; set; } = "";
+    public string exe { get; set; } 
+    public string ameise_vorlage_id { get; set; }
 }
 
 public class jtl 
 {
-    public string software_path { get; set; } = "";
+    public string software_path { get; set; } 
     public ameise ameise { get; set; } = new ameise();
+
 }
 
 public class sql
 {
-    public string server_name { get; set; } = "";
-    public string user_name { get; set; } = "";
-    public string password { get; set; } = "";
-    public string databaseName { get; set; } = "";
+    public string server_name { get; set; } 
+    public string user_name { get; set; } 
+    public string password { get; set; } 
+    public string databaseName { get; set; } 
 }
 
 public class jtl_bihr
 {
-    public string temp_path { get; set; } = "";
-    public int hersteller_importieren { get; set; } = 0;
-    public int artikel_importieren { get; set; } = 0;
+    public int debug { get; set; } 
 }
 
 public class bihr
 {
-    public string url { get; set; } = "";
-    public string user_name { get; set; } = "";
-    public string password { get; set; } = "";
+    public string url { get; set; } 
+    public string user_name { get; set; } 
+    public string password { get; set; } 
 }
 
 public class Env {

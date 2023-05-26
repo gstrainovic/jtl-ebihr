@@ -29,7 +29,7 @@ public class AmeiseImport : Config
 
         // logfile is template + ms since 1970
         string logFileName = $"{template}_{DateTimeOffset.Now.ToUnixTimeMilliseconds()}.log";
-        string logFilePath = Path.Combine(jtl_bihr.temp_path, logFileName);
+        string logFilePath = Path.Combine(temp_path, logFileName);
         if (logFilePath == null)
         {
             // Logger.Error("logFilePath is null");
@@ -73,14 +73,10 @@ public class AmeiseImport : Config
         }
     }
 
-    public void importBrands(string importBrandsFilePath)
-    {
-        run(jtl.ameise.brand_vorlage_id, importBrandsFilePath);
-    }
 
     public void importHardPartsAndRiderGears(string importBrandsFilePath)
     {
-        run(jtl.ameise.hard_part_vorlage_id, importBrandsFilePath);
+        run(jtl.ameise.ameise_vorlage_id, importBrandsFilePath);
     }
 
 

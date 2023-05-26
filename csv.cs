@@ -82,96 +82,105 @@ class Csv : Config
 
             _logger.LogInformation($"Transformed CSV file: {targetFilePath}");
 
+            Config config = new Config();
+            if (config.jtl_bihr.debug == 1) {
+                // cut the file, only the first 10 lines
+                string[] lines = File.ReadAllLines(targetFilePath);
+                string[] first10lines = lines.Take(10).ToArray();
+                File.WriteAllLines(targetFilePath, first10lines);
+            }
+
+
             // delete the original CSV file
             File.Delete(file);
         }
     }
 
-    public void GenerateBrands(string catalogTempDir)
-    {
+    // public void GenerateBrands(string catalogTempDir)
+    // {
 
-        string importBrandsFilePath = Path.Combine(jtl_bihr.temp_path, "importBrands.csv");
-        if (importBrandsFilePath == null)
-        {
-            // Logger.Error("importBrandsFilePath is null");
-            _logger.LogError("importBrandsFilePath is null");
-            return;
-        }
+    //     string importBrandsFilePath = Path.Combine(temp_path, "importBrands.csv");
+    //     if (importBrandsFilePath == null)
+    //     {
+    //         // Logger.Error("importBrandsFilePath is null");
+    //         _logger.LogError("importBrandsFilePath is null");
+    //         return;
+    //     }
 
-        var bihrBrands = new List<Brand>();
+    //     var bihrBrands = new List<Brand>();
 
-        foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
-        {
-            _logger.LogInformation($"Processing {file}");
-            using (var reader = new StreamReader(file))
-            using (var csv = new CsvReader(reader, csvconfig))
-            {
-                var records = csv.GetRecords<CatalogHardPartsSource>();
+    //     foreach (var file in Directory.GetFiles(catalogTempDir, "*.csv"))
+    //     {
+    //         _logger.LogInformation($"Processing {file}");
+    //         using (var reader = new StreamReader(file))
+    //         using (var csv = new CsvReader(reader, csvconfig))
+    //         {
+    //             var records = csv.GetRecords<CatalogHardPartsSource>();
 
-                foreach (var record in records)
-                {
-                    if (!bihrBrands.Any(x => x.Name == record.Brand))
-                    {
-                        bihrBrands.Add(new Brand { Name = record.Brand });
-                    }
-                }
-            }
-        }
+    //             foreach (var record in records)
+    //             {
+    //                 if (!bihrBrands.Any(x => x.Name == record.Brand))
+    //                 {
+    //                     bihrBrands.Add(new Brand { Name = record.Brand });
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        // read the brands from JTL
-        using var db = new EazyBusinessContext();
-        var jtlBrands = db.THerstellers.ToList();
+    //     // read the brands from JTL
+    //     using var db = new EazyBusinessContext();
+    //     var jtlBrands = db.THerstellers.ToList();
 
-        // compare the brands from JTL with the brands from Bihr
-        // if the brand from Bihr is not in JTL, make a new import csv file
-        var importBrands = new List<Brand>();
-        foreach (var bihrBrand in bihrBrands)
-        {
-            if (!jtlBrands.Any(x => x.CName == bihrBrand.Name))
-            {
-                importBrands.Add(new Brand { Name = bihrBrand.Name });
-                _logger.LogInformation($"Brand {bihrBrand.Name} not found in JTL, added to {importBrandsFilePath}");
-            }
-        }
+    //     // compare the brands from JTL with the brands from Bihr
+    //     // if the brand from Bihr is not in JTL, make a new import csv file
+    //     var importBrands = new List<Brand>();
+    //     foreach (var bihrBrand in bihrBrands)
+    //     {
+    //         if (!jtlBrands.Any(x => x.CName == bihrBrand.Name))
+    //         {
+    //             importBrands.Add(new Brand { Name = bihrBrand.Name });
+    //             _logger.LogInformation($"Brand {bihrBrand.Name} not found in JTL, added to {importBrandsFilePath}");
+    //         }
+    //     }
 
-        // save the import csv file if importBrands is not empty
-        if (importBrands.Count == 0)
-        {
-            _logger.LogInformation($"No brands to import");
-        }
-        else
-        {
-            // delete the import csv file if it exists
-            if (File.Exists(Path.Combine(jtl_bihr.temp_path, importBrandsFilePath)))
-            {
-                File.Delete(Path.Combine(jtl_bihr.temp_path, importBrandsFilePath));
-            }
-            using (var writer = new StreamWriter(Path.Combine(jtl_bihr.temp_path, importBrandsFilePath)))
-            using (var csv = new CsvWriter(writer, csvconfig))
-            {
-                csv.WriteRecords(importBrands);
-                _logger.LogInformation($"Saved {importBrandsFilePath}");
-            }
-        }
+    //     // save the import csv file if importBrands is not empty
+    //     if (importBrands.Count == 0)
+    //     {
+    //         _logger.LogInformation($"No brands to import");
+    //     }
+    //     else
+    //     {
+    //         // delete the import csv file if it exists
+    //         if (File.Exists(Path.Combine(temp_path, importBrandsFilePath)))
+    //         {
+    //             File.Delete(Path.Combine(temp_path, importBrandsFilePath));
+    //         }
+    //         using (var writer = new StreamWriter(Path.Combine(temp_path, importBrandsFilePath)))
+    //         using (var csv = new CsvWriter(writer, csvconfig))
+    //         {
+    //             csv.WriteRecords(importBrands);
+    //             _logger.LogInformation($"Saved {importBrandsFilePath}");
+    //         }
+    //     }
 
-        bool importBrandsFileExists = File.Exists(Path.Combine(jtl_bihr.temp_path, importBrandsFilePath));
+    //     bool importBrandsFileExists = File.Exists(Path.Combine(temp_path, importBrandsFilePath));
 
-        if (importBrandsFileExists && importBrandsFilePath != null)
-        {
-            _ameise.importBrands(importBrandsFilePath);
-        }
+    //     if (importBrandsFileExists && importBrandsFilePath != null)
+    //     {
+    //         _ameise.importBrands(importBrandsFilePath);
+    //     }
 
         
 
-    }
+    // }
 
-    public class Brand
-    {
-        public string? Name
-        {
-            get; set;
-        }
-    }
+    // public class Brand
+    // {
+    //     public string? Name
+    //     {
+    //         get; set;
+    //     }
+    // }
 
     public class CatalogExtendedReferences
     {
